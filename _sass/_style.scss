@@ -37,9 +37,11 @@ blockquote {
   color: #7a7a7a;
   border-left: .25rem solid #e5e5e5;
 }
+
 blockquote p:last-child {
   margin-bottom: 0;
 }
+
 @media (min-width: 30em) {
   blockquote {
     padding-right: 5rem;
@@ -80,13 +82,14 @@ blockquote p:last-child {
   }
 }
 
-
 .embed-responsive {
   position: relative;
   display: block;
   height: 0;
   padding: 0;
   overflow: hidden;
+  background-color: #000;
+  margin-bottom: 1rem;
 
   .no-js & {
     display: none;
@@ -109,15 +112,6 @@ blockquote p:last-child {
   &.embed-responsive-16by9 {
     padding-bottom: 56.25%;
   }
-}
-
-//
-// Resets
-//
-
-.embed-responsive {
-  background-color: #000;
-  margin-bottom: 1rem;
 
   .page-videos & {
     margin-top: .5rem;
