@@ -2,9 +2,9 @@
 # Feel free to add content and custom Front Matter to this file.
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
-layout: home
+layout: page
+title: Welcome to GitHub Pages
 ---
-## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/aursu/aursu.github.io/edit/main/index.md) to maintain and preview the content for your website in Markdown files.
 

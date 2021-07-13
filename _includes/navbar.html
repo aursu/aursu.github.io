@@ -1,0 +1,27 @@
+<header class="navbar navbar-expand navbar-dark flex-column flex-md-row blog-navbar px-0">
+  {%- assign default_paths = site.pages | map: "path" -%}
+  {%- assign page_paths = site.header_pages | default: default_paths -%}
+  <div class="container flex-wrap flex-md-nowrap py-0 px-3">
+      <a class="navbar-brand py-0 mr-0 mr-md-2" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
+      {%- if page_paths -%}
+      {%- assign active_page = page_paths.first -%}
+      <div class="navbar-nav-scroll order-3 order-md-0 d-flex justify-content-center justify-content-md-start" id="navbarNavAltMarkup">
+        <ul class="navbar-nav flex-row">
+          {%- for path in page_paths -%}
+            {%- assign my_page = site.pages | where: "path", path | first -%}
+            {%- if my_page.title -%}
+            <li class="nav-item">
+              {%- if my_page.title == page.title -%}
+              <a class="nav-link active" aria-current="page" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
+              {% else %}
+              <a class="nav-link" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
+              {%- endif -%}
+            </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+      {%- endif -%}
+      {% include social.html %}
+    </div>
+</header>

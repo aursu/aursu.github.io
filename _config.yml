@@ -22,7 +22,7 @@ title: Notebook
 email: mail@nkhost.net
 description: >- # this means to ignore newlines until "baseurl:"
   Set of notes about infrastructure management via Puppet, Puppet Bolt,
-  OpenStack Heat and another useful technologies
+  OpenStack Heat and another tools
 baseurl: "" # the subpath of your site, e.g. /blog
 github_username:  aursu
 domain: aursu.github.io       # if you want to force HTTPS, specify the domain without the http at the start, e.g. example.com
@@ -30,11 +30,21 @@ url: https://aursu.github.io  # the base hostname and protocol for your site, e.
 
 # Build settings
 theme: minima
+
+# Pagination
+paginate: 5
+
 plugins:
   - jekyll-feed
+  - jekyll-paginate
+  - jekyll-redirect-from
+  - jekyll-seo-tag
+  - jekyll-sitemap
 
 header_pages:
+  - welcome.markdown
   - about.markdown
+  - index.html
 
 kramdown:
   syntax_highlighter_opts:
