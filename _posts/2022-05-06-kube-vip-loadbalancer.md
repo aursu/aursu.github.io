@@ -29,12 +29,42 @@ By passing in `--inCluster` we instruct `kube-vip` to use `ServiceAccount` calle
 
 By passing in `--leaderElection` we instruct `kube-vip` to enable Kubernetes LeaderElection used by ARP, as only the leader can broadcast [gratuitous ARP](https://wiki.wireshark.org/Gratuitous_ARP)
 
+### Deploy kubevip-cloud-provider
+
+The `kube-vip` cloud provider can be used to populate an IP address for Services of type `LoadBalancer` similar to what public cloud providers allow through a Kubernetes CCM.
+
+```
+kubectl apply -f https://kube-vip.io/manifests/controller.yaml
+```
+
 ### Create the RBAC settings
 
 Since `kube-vip` as a `DaemonSet` runs as a regular resource, it still needs the correct access to be able to watch Kubernetes Services and other objects. In order to do this, RBAC resources must be created which include a `ServiceAccount`, `ClusterRole`, and `ClusterRoleBinding` and can be applied this with the command:
 
 ```
 kubectl apply -f https://kube-vip.io/manifests/rbac.yaml
+```
+
+###  Create a global CIDR or IP Range
+
+```
+apiVersion: v1
+data:
+  range-global: 192.168.0.33-192.168.0.62
+kind: ConfigMap
+metadata:
+  name: kubevip
+  namespace: kube-system
+```
+
+### Enable strict ARP in kube-proxy
+
+Use next command to apply changes into `kube-proxy`:
+
+```
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+sed -e "s/strictARP: false/strictARP: true/" | \
+kubectl apply -f - -n kube-system
 ```
 
 ### Generating a Manifest
@@ -318,3 +348,4 @@ To get created manifest, use next command:
 ```
 kubectl logs deploy/kube-vip-manifest-ds > kube-vip-ds-bgp.yaml
 ```
+
