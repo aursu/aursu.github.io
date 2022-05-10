@@ -13,9 +13,9 @@ In cloud-based Kubernetes clusters, services are usually exposed by using load b
 Following documentation, especially [`Installation` section](https://kube-vip.chipzoller.dev/docs/installation/),
 there are 2 ways to install it into Kubernetes cluster:
 
-1) [`Static Pods`](https://kube-vip.chipzoller.dev/docs/installation/static/) which is primarily required for `kubeadm` as this is due to the sequence of actions performed by `kubeadm`.
+1. [`Static Pods`](https://kube-vip.chipzoller.dev/docs/installation/static/) which is primarily required for `kubeadm` as this is due to the sequence of actions performed by `kubeadm`.
 
-2) [`DaemonSet`](https://kube-vip.chipzoller.dev/docs/installation/daemonset/) when we can apply `kube-vip` to the cluster once the first node has been brought up.
+2. [`DaemonSet`](https://kube-vip.chipzoller.dev/docs/installation/daemonset/) when we can apply `kube-vip` to the cluster once the first node has been brought up.
 
 Unlike running `kube-vip` as a static Pod there are a few more things that may need configuring when running `kube-vip` as a `DaemonSet`.
 
@@ -230,4 +230,91 @@ status:
   desiredNumberScheduled: 0
   numberMisscheduled: 0
   numberReady: 0
+```
+
+### Creating manifest on Cri-O
+
+`crictl` command operates with Pods, therefore it is difficult to use `crictl run`
+
+Instead it is better to create Kubernetes manifests.
+
+#### ARP
+
+```
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-vip-manifest-ds
+spec:
+  selector:
+    matchLabels:
+      app: kube-vip-manifest-arp
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kube-vip-manifest-arp
+    spec:
+      containers:
+      - name: kube-vip-manifest
+        image: ghcr.io/kube-vip/kube-vip:v0.4.4
+        command:
+         - '/kube-vip'
+         - 'manifest'
+         - 'daemonset'
+         - '--services'
+         - '--arp'
+         - '--inCluster'
+         - '--leaderElection'
+      hostNetwork: true
+```
+
+#### BGP
+
+```
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-vip-manifest-ds
+spec:
+  selector:
+    matchLabels:
+      app: kube-vip-manifest-bgp
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kube-vip-manifest-bgp
+    spec:
+      containers:
+      - name: kube-vip-manifest
+        image: ghcr.io/kube-vip/kube-vip:v0.4.4
+        command:
+         - '/kube-vip'
+         - 'manifest'
+         - 'daemonset'
+         - '--inCluster'
+         - '--interface'
+         - 'lo'
+         - '--services'
+         - '--bgp'
+         - '--bgpRouterID'
+         - '10.100.16.1'
+         - '--bgppeers'
+         - '10.100.16.6:65000::false,10.100.16.7:65000::false,10.100.16.9:65000::false'
+      hostNetwork: true
+```
+
+To apply these manifests, use next command:
+
+```
+kubectl apply -f kube-vip-manifest-ds.yaml 
+```
+
+To get created manifest, use next command:
+
+```
+kubectl logs deploy/kube-vip-manifest-ds > kube-vip-ds-bgp.yaml
 ```
