@@ -29,12 +29,20 @@ By passing in `--inCluster` we instruct `kube-vip` to use `ServiceAccount` calle
 
 By passing in `--leaderElection` we instruct `kube-vip` to enable Kubernetes LeaderElection used by ARP, as only the leader can broadcast [gratuitous ARP](https://wiki.wireshark.org/Gratuitous_ARP)
 
-### Deploy kubevip-cloud-provider
+### [Install the kube-vip Cloud Provider](https://kube-vip.chipzoller.dev/docs/usage/cloud-provider/#install-the-kube-vip-cloud-provider)
 
 The `kube-vip` cloud provider can be used to populate an IP address for Services of type `LoadBalancer` similar to what public cloud providers allow through a Kubernetes CCM.
 
+Install it  using either latest image from Docker Hub:
+
 ```
 kubectl apply -f https://kube-vip.io/manifests/controller.yaml
+```
+
+or latest image from GitHub Packages (ghcr.io):
+
+```
+kubectl apply -f https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml
 ```
 
 ### Create the RBAC settings
@@ -45,7 +53,7 @@ Since `kube-vip` as a `DaemonSet` runs as a regular resource, it still needs the
 kubectl apply -f https://kube-vip.io/manifests/rbac.yaml
 ```
 
-###  Create a global CIDR or IP Range
+###  [Create a global CIDR or IP Range](https://kube-vip.chipzoller.dev/docs/usage/cloud-provider/#create-a-global-cidr-or-ip-range)
 
 ```
 apiVersion: v1
@@ -57,7 +65,7 @@ metadata:
   namespace: kube-system
 ```
 
-### Enable strict ARP in kube-proxy
+### [Enable strict ARP in kube-proxy](https://kube-vip.io/kubernetes/arp/)
 
 Use next command to apply changes into `kube-proxy`:
 
@@ -67,7 +75,7 @@ sed -e "s/strictARP: false/strictARP: true/" | \
 kubectl apply -f - -n kube-system
 ```
 
-### Generating a Manifest
+### [Generating a Manifest](https://kube-vip.chipzoller.dev/docs/installation/static/#generating-a-manifest)
 
 It is possible to use the `kube-vip` container itself to generate `DaemonSet` manifest. We do this by running the `kube-vip` image as a container and passing in the various [flags](https://kube-vip.chipzoller.dev/docs/installation/flags/) for the capabilities we want to enable.
 
@@ -262,7 +270,7 @@ status:
   numberReady: 0
 ```
 
-### Creating manifest on Cri-O
+### Creating manifest on CRI-O
 
 `crictl` command operates with Pods, therefore it is difficult to use `crictl run`
 
@@ -337,13 +345,13 @@ spec:
       hostNetwork: true
 ```
 
-To apply these manifests, use next command:
+To apply this manifest, use next command:
 
 ```
 kubectl apply -f kube-vip-manifest-ds.yaml 
 ```
 
-To get created manifest, use next command:
+To get just generated manifest, use next command:
 
 ```
 kubectl logs deploy/kube-vip-manifest-ds > kube-vip-ds-bgp.yaml
