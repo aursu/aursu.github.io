@@ -331,9 +331,9 @@ spec:
          - '--services'
          - '--bgp'
          - '--bgpRouterID'
-         - '10.100.16.1'
+         - '192.168.0.1'
          - '--bgppeers'
-         - '10.100.16.6:65000::false,10.100.16.7:65000::false,10.100.16.9:65000::false'
+         - '192.168.0.6:65000::false,192.168.0.7:65000::false,192.168.0.9:65000::false'
       hostNetwork: true
 ```
 
@@ -349,3 +349,33 @@ To get created manifest, use next command:
 kubectl logs deploy/kube-vip-manifest-ds > kube-vip-ds-bgp.yaml
 ```
 
+## Testing
+
+Deploy the [Hello EKS Anywhere](https://anywhere.eks.amazonaws.com/docs/tasks/workload/test-app/) test application.
+
+```
+kubectl apply -f "https://anywhere.eks.amazonaws.com/manifests/hello-eks-a.yaml"
+```
+
+### Create load balancer service:
+
+```
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-eks-a
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello-eks-a
+  ports:
+    - port: 80
+  loadBalancerIP: 192.168.0.50
+```
+
+### Test it 
+
+```
+curl http://192.168.0.50
+```
