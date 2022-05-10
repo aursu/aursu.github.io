@@ -13,9 +13,9 @@ In cloud-based Kubernetes clusters, services are usually exposed by using load b
 Following documentation, especially [`Installation` section](https://kube-vip.chipzoller.dev/docs/installation/),
 there are 2 ways to install it into Kubernetes cluster:
 
-    1) [`Static Pods`](https://kube-vip.chipzoller.dev/docs/installation/static/) which is primarily required for `kubeadm` as this is due to the sequence of actions performed by `kubeadm`.
+1) [`Static Pods`](https://kube-vip.chipzoller.dev/docs/installation/static/) which is primarily required for `kubeadm` as this is due to the sequence of actions performed by `kubeadm`.
 
-    2) [`DaemonSet`](https://kube-vip.chipzoller.dev/docs/installation/daemonset/) when we can apply `kube-vip` to the cluster once the first node has been brought up.
+2) [`DaemonSet`](https://kube-vip.chipzoller.dev/docs/installation/daemonset/) when we can apply `kube-vip` to the cluster once the first node has been brought up.
 
 Unlike running `kube-vip` as a static Pod there are a few more things that may need configuring when running `kube-vip` as a `DaemonSet`.
 
@@ -154,7 +154,7 @@ status:
 
 This configuration will create a manifest that starts `kube-vip` providing Kubernetes Service management. Unlike ARP, all nodes in the BGP configuration will advertise virtual IP addresses.
 
-    Note: we bind the address to `lo` as we don't want multiple devices that have the same address on public interfaces. We must specify at least one peer in a comma-separated list in the format of `address:AS:password:multihop`. The `routerID` needs to be specified as well.
+> Note: we bind the address to `lo` as we don't want multiple devices that have the same address on public interfaces. We must specify at least one peer in a comma-separated list in the format of `address:AS:password:multihop`. The `routerID` needs to be specified as well.
 
 ```
 export INTERFACE=lo
