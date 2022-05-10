@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Kube-Vip Load Balancer for On-Premise Kubernetes"
-date:   2021-07-17 14:25:00 +0200
+date:   2022-05-10 10:35:00 +0200
 categories: kubernetes networking
 ---
 
