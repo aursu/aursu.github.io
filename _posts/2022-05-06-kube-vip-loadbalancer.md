@@ -4,6 +4,7 @@ title:  "Kube-Vip Load Balancer for On-Premise Kubernetes"
 date:   2021-07-17 14:25:00 +0200
 categories: kubernetes networking
 ---
+
 `kube-vip` is an open-source project that aims to simplify providing load balancing services for Kubernetes clusters.
 
 In cloud-based Kubernetes clusters, services are usually exposed by using load balancers provided by cloud vendors. However, cloud-based load balancers are unavailable in bare-metal environments. `kube-vip` allows users to create LoadBalancer Services in bare-metal, edge, and virtualization environments for external access, and provides the same user experience as cloud-based load balancers.
@@ -27,7 +28,7 @@ By passing in `--services` we tell `kube-vip` to provide load balancing for Kube
 
 By passing in `--inCluster` we instruct `kube-vip` to use `ServiceAccount` called `kube-vip` (`serviceAccountName: kube-vip`). It is required for `kube-vip` as `DaemonSet`.
 
-By passing in `--leaderElection` we instruct `kube-vip` to enable Kubernetes LeaderElection used by ARP, as only the leader can broadcast [gratuitous ARP](https://wiki.wireshark.org/Gratuitous_ARP)
+By passing in `--leaderElection` we instruct `kube-vip` to enable [Kubernetes leader election](https://kubernetes.io/blog/2016/01/simple-leader-election-with-kubernetes/) used by ARP, as only the leader can broadcast [ARP](https://wiki.wireshark.org/Gratuitous_ARP)
 
 ### [Install the kube-vip Cloud Provider](https://kube-vip.chipzoller.dev/docs/usage/cloud-provider/#install-the-kube-vip-cloud-provider)
 
@@ -122,6 +123,8 @@ alias kube-vip="docker run --rm --network host ghcr.io/kube-vip/kube-vip:$KVVERS
 #### ARP
 
 With the inputs and alias command set, we can run the `kube-vip` container to generate a manifest. This is assumed to run on the control plane node.
+
+`kube-vip` can optionally be configured to broadcast a Gratuitous ARP that will typically immediately notify all local hosts that the VIP-to-MAC address mapping has changed.
 
 This configuration will create a manifest that starts `kube-vip` providing Kubernetes Service management using the `leaderElection` method and ARP. When this instance is elected as the leader, it will bind the `vip` to default network interface. This is the same behavior for Services of type `LoadBalancer`.
 
